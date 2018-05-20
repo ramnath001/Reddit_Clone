@@ -2,7 +2,7 @@ angular
   .module('redditClone', ['ngAnimate'])
   .controller('RedditController', RedditController);
 
-  function RedditController($scope) {
+function RedditController($scope) {
   // Get the array of posts:
   $scope.posts = posts;
 
@@ -54,6 +54,7 @@ angular
 
     // Push it to the array of posts:
     posts.push(newPost);
+    
 
     // Reset the form:
     $scope.newPostForm.title = '';
