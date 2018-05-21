@@ -18,6 +18,9 @@ function RedditController($scope) {
     }
   };
 
+/*
+ * This function creates a new post and adds it to the posts array
+ */
   $scope.createNewPost = function createNewPost() {
     // Create the new post:
     const newPost = {};
@@ -64,9 +67,9 @@ function RedditController($scope) {
     $scope.showNewPostForm = false;
   };
 
-  // Create new comment:
+  // This function creates a new comment
   $scope.createNewComment = function createNewComment() {
-    // Create the new post:
+  
     const newComment = {};
     newComment.commenter = this.newCommentForm.commenter;
     newComment.commentBody = this.newCommentForm.commentBody;

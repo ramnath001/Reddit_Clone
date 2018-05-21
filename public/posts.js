@@ -1,3 +1,5 @@
+//The posts array holds the posts created by users with various attributes
+
 const posts = [
   {
     title: 'New York',
