@@ -52,13 +52,20 @@ app.post("/api/comments/:commentId", function(req, res) {
 //api to increment the votes counter for a post
 app.post("/api/posts/:postId", function(req, res) {
     console.log(req.body);
-
+    var man = req.query.q;
     for (var i in posts) {
       if (posts[i].id == req.params.postId) {
-        posts[i].points += 1;
+      	if(man == 'add'){
+         posts[i].points += 1;
+         break;
+      }
+      else if(man == 'sub'){
+      	posts[i].points -= 1;
+      	break;
+
       }
     }
-
+  }
     res.json(posts);
   });
 
