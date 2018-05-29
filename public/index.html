@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+fadd<!DOCTYPE html>
 <html ng-app="redditClone" ng-cloak>
 
 <head>
@@ -100,8 +100,8 @@
             <img ng-src="{{post.imageURL}}" />
           </div>
           <div class="post-info">
-            <h3>{{post.title}} | <a href=""><i ng-click="post.addPoints()" class="fa fa-thumbs-up green" aria-hidden="true"></i></a>
-              <a href=""><i ng-click="post.subtractPoints()" class="fa fa-thumbs-down red" aria-hidden="true"></i></a> <span ng-class="{green: post.points > 0, red: post.points < 0}">{{post.points}}</span></h3>
+            <h3>{{post.title}} | <a href=""><i ng-click="addPoints(post.id,'add')" class="fa fa-thumbs-up green" aria-hidden="true"></i></a>
+              <a href=""><i ng-click="subtractPoints(post.id,'sub')" class="fa fa-thumbs-down red" aria-hidden="true"></i></a> <span ng-class="{green: post.points > 0, red: post.points < 0}">{{post.points}}</span></h3>
             <p class="author">
               By: {{post.author}}
             </p>
@@ -109,10 +109,10 @@
               {{post.postBody}}
             </p>
             <p>
-              {{post.timestamp | date: "EEE, MMM d, y h:mm a"}} | <a href="" ng-click="post.toggleComments()"><i class="fa fa-comments" aria-hidden="true"></i>&nbsp;{{post.comments.length}} <ng-pluralize count="post.comments.length" when="{'1': 'Comment','other': 'Comments'}"></ng-pluralize></a>              | <a href="" ng-click="post.toggleNewCommentsForm()"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Comment</a>
+              {{post.timestamp | date: "EEE, MMM d, y h:mm a"}} | <a href="" ng-click="toggleComments(post.id)"><i class="fa fa-comments" aria-hidden="true"></i>&nbsp;{{post.comments.length}} <ng-pluralize count="post.comments.length" when="{'1': 'Comment','other': 'Comments'}"></ng-pluralize></a>              | <a href="" ng-click="toggleNewCommentsForm(post.id)"><i class="fa fa-plus-circle" aria-hidden="true"></i> Add Comment</a>
             </p>
-            <div ng-show="post.showNewCommentForm" class="well cc-well">
-              <form ng-submit="createNewComment()" name="newCommentForm" class="form-horizontal col-md-9">
+            <div ng-show="showNewCommentForm" id ="post.id" class="well cc-well">
+              <form ng-submit="createNewComment(post.id)" name="newCommentForm" class="form-horizontal col-md-9">
                 <div class="form-group">
                   <label for="commenter" class="col-sm-4 control-label">Author:</label>
                   <div class="col-sm-8">
@@ -151,15 +151,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.js" charset="utf-8"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular-animate.js"></script>
     <!-- My app -->
-    <script src="posts.js" charset="utf-8"></script>
+    <!--<script src="posts.js" charset="utf-8"></script>-->
      <script src="app.js" charset="utf-8"></script>
+     <script src="postservice.js" charset="utf-8"></script> <!-- load our todo service -->
+     <script src="core.js" charset="utf-8"></script>
    
-    
-</body>
-
-</html>
-
-
-
 </body>
 </html>

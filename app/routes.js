@@ -1,4 +1,5 @@
 module.exports = function(app) {
+	 var posts = [];
 
 //helper function to return all posts 
 function getPosts(res) {

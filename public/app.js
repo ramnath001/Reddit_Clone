@@ -1,53 +1,69 @@
-angular
-  .module('redditClone', ['ngAnimate'])
-  .controller('RedditController', RedditController);
+angular.module("RedditCtlr", ["ngAnimate"]).controller("RedditController", [
+  "$scope",
+  "$http",
+  "postService",
+  function($scope, $http, postService) {
+   
+    // Don't show the newPostForm initially:
+    $scope.showNewPostForm = false;
+    $scope.showNewCommentForm = false;
+    $scope.toggleComments = false;
 
-function RedditController($scope) {
-  // Get the array of posts:
-  $scope.posts = posts;
-
-  // Don't show the newPostForm initially:
-  $scope.showNewPostForm = false;
-
-  // Toggle form as needed:
-  $scope.toggleNewPostForm = function toggleNewPostForm() {
-    if ($scope.showNewPostForm) {
-      $scope.showNewPostForm = false;
-    } else {
-      $scope.showNewPostForm = true;
-    }
-  };
-
-/*
- * This function creates a new post and adds it to the posts array
- */
-  $scope.createNewPost = function createNewPost() {
-    // Create the new post:
-    const newPost = {};
-    newPost.title = $scope.newPostForm.title;
-    newPost.author = $scope.newPostForm.author;
-    newPost.imageURL = $scope.newPostForm.imageURL;
-    newPost.postBody = $scope.newPostForm.postBody;
-    newPost.timestamp = new Date();
-    newPost.points = 0;
-    newPost.addPoints = function addPoints() {
-      this.points += 1;
-    };
-    newPost.subtractPoints = function subtractPoints() {
-      this.points -= 1;
-    };
-    newPost.commentCount = 0;
-    newPost.comments = [];
-    newPost.showComments = false;
-    newPost.toggleComments = function toggleComments() {
-      if (this.showComments) {
-        this.showComments = false;
+    // Toggle form as needed:
+    $scope.toggleNewPostForm = function toggleNewPostForm() {
+      if ($scope.showNewPostForm) {
+        $scope.showNewPostForm = false;
       } else {
-        this.showComments = true;
+        $scope.showNewPostForm = true;
       }
     };
-    newPost.showNewCommentForm = false;
-    newPost.toggleNewCommentsForm = function toggleNewCommentsForm() {
+
+/*
+ * This function calls the create post service which intiates an http request to the server
+ */
+    $scope.createNewPost = function createNewPost() {
+      console.log($scope.newPostForm);
+
+      postService.createPost($scope.newPostForm).success(function(data) {
+        //$scope.loading = false;
+        console.log("in create " + data);
+        $scope.newPostForm = {}; // clear the form so our user is ready to enter another
+        $scope.posts = data;
+        console.log(data); // assign our new list of todos
+      });
+      $scope.showNewPostForm = false;
+    };
+
+  /*
+ * This function calls the create comment service which intiates an http request to the server
+ */
+    $scope.createNewComment = function createNewComment(pid) {
+      var newComment = {};
+      newComment.commenter = this.newCommentForm.commenter;
+      newComment.commentBody = this.newCommentForm.commentBody;
+      console.log("commentform " + JSON.stringify(newComment));
+      console.log(pid);
+
+      postService.createComment(newComment, pid).success(function(data) {
+        $scope.posts = data;
+      });
+      $scope.showNewPostForm = false;
+    };
+
+    $scope.addPoints = function addPoints(pid,action) {
+      console.log(pid);
+
+      postService.manipulatePoints(pid,action).success(function(data) {
+        console.log(JSON.stringify(data));
+
+        console.log("increment success " + data);
+
+        $scope.posts = data;
+        console.log(JSON.stringify(data));
+      });
+    };
+
+    $scope.toggleNewCommentsForm = function toggleNewCommentsForm() {
       if (this.showNewCommentForm) {
         this.showNewCommentForm = false;
       } else {
@@ -55,33 +71,42 @@ function RedditController($scope) {
       }
     };
 
-    // Push it to the array of posts:
-    posts.push(newPost);
+   
+    $scope.toggleComments = function toggleComments(pid) {
+      console.log(pid);
+      for (var i in $scope.posts) {
+        if ($scope.posts[i].id == pid) {
+          $scope.posts[i].showComments = true;
+        } else {
+          $scope.posts[i].showComments = false;
+        }
+      }
+      console.log($scope.posts);
+    };
+
     
+    $scope.toggleNewCommentsForm = function toggleNewCommentsForm() {
+      if (this.showNewCommentForm) {
+        this.showNewCommentForm = false;
+      } else {
+        this.showNewCommentForm = true;
+      }
+    };
 
-    // Reset the form:
-    $scope.newPostForm.title = '';
-    $scope.newPostForm.author = '';
-    $scope.newPostForm.imageURL = '';
-    $scope.newPostForm.postBody = '';
-    $scope.showNewPostForm = false;
-  };
+   
+    $scope.subtractPoints = function subtractPoints(pid,action) {
+      console.log(pid);
 
-  // This function creates a new comment
-  $scope.createNewComment = function createNewComment() {
-  
-    const newComment = {};
-    newComment.commenter = this.newCommentForm.commenter;
-    newComment.commentBody = this.newCommentForm.commentBody;
+      postService.manipulatePoints(pid,action).success(function(data) {
+        console.log(JSON.stringify(data));
 
-    // Push it to the array of posts:
-    this.post.comments.push(newComment);
+        console.log("decrement success " + data);
 
-    // Reset the new comment form:
-    this.newCommentForm = {};
-    this.post.showNewCommentForm = false;
-  };
+        $scope.posts = data;
+        console.log(JSON.stringify(data));
+      });
+    };
 
-  $scope.sortBy = '-points';
-}
-
+    $scope.sortBy = "-points";
+  }
+]);
