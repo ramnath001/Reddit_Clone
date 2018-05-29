@@ -14,8 +14,8 @@ angular.module('PostService', [])
 			createComment : function(commentData,commentId) {
 				return $http.post('/api/comments/'+ commentId, commentData);
 			},
-			incrementPoints : function(commentId){
-				return $http.post('/api/posts/'+commentId);
+			manipulatePoints : function(commentId,action){
+				return $http.post('/api/posts/'+commentId+'?q='+action);
 			}
 			
 			
