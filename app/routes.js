@@ -13,7 +13,7 @@ function getComments(res) {
 
 //api to create a post and return a json array of all the posts
 app.post("/api/posts", function(req, res) {
-    console.log(req.body);
+   
     var newPost = {};
     newPost.id = Math.floor(Math.random() * 100000000000000);
     newPost.title = req.body.title;
@@ -23,24 +23,20 @@ app.post("/api/posts", function(req, res) {
     newPost.comments = [];
     newPost.points = 0;
     newPost.timestamp = new Date();
-
     posts.push(newPost);
-    console.log("add " + JSON.stringify(posts));
-
     getPosts(posts);
     res.json(posts);
 });
 
-app.post("/api/comments/:commentId", function(req, res) {
-    console.log(req.body);
-
+//api to create a comment for a particular post
+app.post("/api/posts/:postId/comments", function(req, res) {
+   
     var newComment = {};
     newComment.commenter = req.body.commenter;
     newComment.commentBody = req.body.commentBody;
-    console.log(newComment);
-
+    
     for (var i in posts) {
-      if (posts[i].id == req.params.commentId) {
+      if (posts[i].id == req.params.postId) {
         posts[i].comments.push(newComment);
       }
     }
@@ -49,17 +45,19 @@ app.post("/api/comments/:commentId", function(req, res) {
     res.json(posts);
 });
 
-//api to increment the votes counter for a post
+/*api to increment or decrement the votes counter for a post
+*the votes are increased or decreased based on the value of the query parameter
+*/
 app.post("/api/posts/:postId", function(req, res) {
-    console.log(req.body);
-    var man = req.query.q;
+    
+    var actionToPerform = req.query.q;
     for (var i in posts) {
       if (posts[i].id == req.params.postId) {
-      	if(man == 'add'){
+      	if(actionToPerform == 'add'){
          posts[i].points += 1;
          break;
       }
-      else if(man == 'sub'){
+      else if(actionToPerform == 'sub'){
       	posts[i].points -= 1;
       	break;
 
@@ -70,13 +68,16 @@ app.post("/api/posts/:postId", function(req, res) {
   });
 
 
+//Api to get all the posts
+app.get("/api/posts", function(req, res) {
+    
+    res.json(posts);
+});
 
-	// server routes ===========================================================
-	// handle things like api calls
-	// authentication routes
-
-	// frontend routes =========================================================
-	// route to handle all angular requests
+    /* Route to handle landing page of the application
+     * redirects to index.html on load
+     */
+	
 	app.get('*', function(req, res) {
 		res.sendfile('./public/index.html');
 	});

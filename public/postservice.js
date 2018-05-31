@@ -5,17 +5,20 @@ angular.module('PostService', [])
 	// each function returns a promise object 
 	.service('postService', ['$http',function($http) {
 		return {
-			get : function() {
-				return $http.get('/api/posts');
-			},
+
+			//service to create a post
 			createPost : function(postData) {
 				return $http.post('/api/posts', postData);
 			},
-			createComment : function(commentData,commentId) {
-				return $http.post('/api/comments/'+ commentId, commentData);
+
+			//Adds a comment to the post
+			createComment : function(commentData,postId) {
+				return $http.post('/api/posts/'+ postId+'/comments', commentData);
 			},
-			manipulatePoints : function(commentId,action){
-				return $http.post('/api/posts/'+commentId+'?q='+action);
+
+			//increase or decreases the votes based on the query param 'q'
+			manipulatePoints : function(postId,action){
+				return $http.post('/api/posts/'+postId+'?q='+action);
 			}
 			
 			
