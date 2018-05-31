@@ -1,33 +1,46 @@
-describe('RedditController Test', function() {
-  beforeEach(module('redditClone')); // will be run before each it() function
+let chai = require('chai');
+let chaiHttp = require('chai-http');
+let server = require('../server')
+let should = chai.should();
+let expect = chai.expect;
+;
+chai.use(chaiHttp);
 
-  // we don't need the real factory here. so, we will use a fake one.
-  var mockService = {
-    mockPost: [{'title':'test-1', 'author':'Ram','points':0,'timestamp':'Sun May 20 2018 19:09:40 GMT+0800 (Malay Peninsula Standard Time)','postBody':'test-body'}], //just two elements initially
-    createNewPost: function(content) {
-      this.mockPost.push(content);
-    }
-  };
+it('create post api testing', (done) => {
+     const testQueryObject = [{"id":50226038286989,
+                               "title":"te",
+                               "author":"dqgh",
+                               "postBody":"fdhg",
+                               "showComments":false,
+                               "comments":[],"points":0,
+                               "timestamp":"2018-05-31T12:28:05.918Z"}]
+    chai.request(server)
+      .post('/api/posts')
+      .send(testQueryObject)
+      .end((err, res) => {
+        expect(err).to.not.exist
+        expect(res.status).to.equal(200)
+        done()
+      })
+  })
 
-  // now the real thing: test spec
-  it('should return notes array with two elements initially and then add one',
-    inject(function($rootScope, $controller) { //injects the dependencies
-      var scope = $rootScope.$new();
 
-      // while creating the controller we have to inject the dependencies too.
-      var ctrl = $controller('RedditController', {$scope: scope});
+it('create post api testing', (done) => {
+     const testQueryObject = [{"id":50226038286989,
+                               "title":"te","author":"dqgh",
+                               "postBody":"fdhg",
+                               "showComments":false,
+                               "comments":[{"commenter":"ramnath","commentBody":"test comment"}],
+                               "points":0,
+                               "timestamp":"2018-05-31T12:28:05.918Z"}]
+    chai.request(server)
+       .post('/api/comments/50226038286989')
+       .send(testQueryObject)
+       .end((err, res) => {
+         expect(err).to.not.exist
+         expect(res.status).to.equal(200)
+         done()
+      })
+  })
 
-      // the initial count should be two
-      expect(scope.mockPost.length).toBe(1);
 
-      // enter a new note (Just like typing something into text box)
-      scope.note = 'test3';
-
-      // now run the function that adds a new note (the result of hitting the button in HTML)
-      scope.createNewPost();
-
-      // expect the count of notes to have been increased by one!
-      expect(scope.mockPost.length).toBe(2);
-    })
-  );
-});
