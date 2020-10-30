@@ -8,7 +8,7 @@ var methodOverride = require('method-override');
 	
 // config files
 
-var port = process.env.PORT || 3001; // set our port
+var port = process.env.PORT || 6001; // set our port
 
 // get all data/stuff of the body (POST) parameters
 app.use(bodyParser.json()); // parse application/json 
