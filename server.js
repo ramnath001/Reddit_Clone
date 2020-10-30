@@ -20,7 +20,7 @@ app.use(express.static(__dirname + '/public')); // set the static files location
 // routes ==================================================
 require('./app/routes')(app); // pass our application into our routes
 
-// start app ===============================================
+///// start app ===============================================
 app.listen(port);	
 console.log('Server listening on port ' + port); 
 // expose app			
